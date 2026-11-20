@@ -8,7 +8,7 @@ const asOf=Date.now();
 const intervals={weekly:604800000,daily:86400000,h4:14400000,h1:3600000};
 const bars=Number(process.env.BARS_PER_TIMEFRAME??250);
 if(!Number.isInteger(bars)||bars<210||bars>1000)throw new Error("BARS_PER_TIMEFRAME must be between 210 and 1000 to support strategy warmup");
-const ranges=Object.fromEntries(Object.entries(intervals).map(([key,ms])=>[key,{startTime:Math.floor((asOf-bars*ms)/ms)*ms,endTime:asOf}]));
+const ranges=Object.fromEntries(Object.entries(intervals).map(([key,ms])=>{\n const anchor=key==="weekly"?3*86400000:0;\n const startTime=Math.floor((asOf-bars*ms-anchor)/ms)*ms+anchor;\n return [key,{startTime,endTime:asOf}];\n}));
 const dataset=await loadHistoricalMtfDataset({symbol,ranges,asOf,fetchOptions:{timeoutMs:15000,maxPages:2}});
 if(dataset.status!=="PASS")throw new Error("Historical dataset rejected: "+JSON.stringify(dataset.errors));
 const payload=buildStrategyDataContract(dataset,{evaluationTimes:[asOf]});
