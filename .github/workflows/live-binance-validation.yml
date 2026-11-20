@@ -1,0 +1,38 @@
+name: Live Binance Historical Data Validation
+on:
+  workflow_dispatch:
+    inputs:
+      symbol:
+        description: Binance Spot symbol
+        required: true
+        default: BTCUSDT
+      bars_per_timeframe:
+        description: Closed candles per timeframe (210-1000)
+        required: true
+        default: "250"
+permissions:
+  contents: read
+jobs:
+  live-data-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/binance-historical-data-adapter
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch and validate live Binance Spot history
+        env:
+          SYMBOL: ${{ inputs.symbol }}
+          BARS_PER_TIMEFRAME: ${{ inputs.bars_per_timeframe }}
+          OUTPUT_FILE: artifacts/binance-spot-contract-v1.json
+        run: node scripts/validate-live-binance-contract.mjs
+      - name: Upload versioned strategy contract
+        uses: actions/upload-artifact@v4
+        with:
+          name: binance-spot-contract-v1
+          path: artifacts/binance-spot-contract-v1.json
+          if-no-files-found: error
+          retention-days: 7
