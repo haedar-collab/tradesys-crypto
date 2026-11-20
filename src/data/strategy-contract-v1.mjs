@@ -16,6 +16,5 @@ export function buildStrategyDataContract(dataset,{evaluationTimes,symbolStatus=
   universe:[{symbol:dataset.symbol,quote_asset:quoteAsset,status:symbolStatus}],
   market:{[dataset.symbol]:market},
   context:{source:"BINANCE_PUBLIC_KLINES",data_mode:"HISTORICAL_RESEARCH",evaluation_times_ms:[...evaluationTimes],timeframes:["weekly","daily","h4","h1"],candle_close_policy:"closeTime < evaluation_time"},
-  account:{equity_quote:1,risk_per_trade_pct:0,max_exposure_pct:0,open_positions:[]}
  });
 }
