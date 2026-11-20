@@ -1,0 +1,26 @@
+name: Tradesys Crypto Data Adapter Tests
+
+on:
+  push:
+    branches:
+      - main
+      - feature/binance-historical-data-adapter
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test-data-adapter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run adapter tests
+        run: npm run test:data
