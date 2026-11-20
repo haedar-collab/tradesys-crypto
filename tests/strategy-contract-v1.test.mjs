@@ -1,0 +1,5 @@
+import test from "node:test";import assert from "node:assert/strict";import {buildStrategyDataContract,TRADESYS_DATA_CONTRACT_VERSION} from "../src/data/strategy-contract-v1.mjs";
+const rows=[{openTime:0,closeTime:59,open:1,high:2,low:1,close:2,volume:3,closed:true}];
+const dataset={status:"PASS",symbol:"BTCUSDT",asOf:100,batches:{},canonical:{weekly:rows,daily:rows,h4:rows,h1:rows}};
+test("builds versioned Binance Spot contract with UTC timestamps",()=>{const p=buildStrategyDataContract(dataset,{evaluationTimes:[100,200]});assert.equal(p.schema_version,TRADESYS_DATA_CONTRACT_VERSION);assert.equal(p.venue.market_type,"SPOT");assert.equal(p.market.BTCUSDT.weekly[0].closeTime,59);assert.equal(p.context.evaluation_times_ms.length,2);});
+test("rejects failed datasets and invalid evaluation timeline",()=>{assert.throws(()=>buildStrategyDataContract({...dataset,status:"FAIL"},{evaluationTimes:[100]}),/PASS/);assert.throws(()=>buildStrategyDataContract(dataset,{evaluationTimes:[200,100]}),/strictly increasing/);});
