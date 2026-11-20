@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test:data": "node --test tests/*.test.mjs"
+    "test:data": "node --test tests/*.test.mjs",\n    "validate:live": "node scripts/validate-live-binance-contract.mjs"
   },
   "engines": {
     "node": ">=20"
