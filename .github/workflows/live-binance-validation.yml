@@ -1,5 +1,11 @@
 name: Live Binance Historical Data Validation
 on:
+  push:
+    branches: [feature/binance-historical-data-adapter]
+    paths:
+      - '.github/workflows/live-binance-validation.yml'
+      - 'scripts/validate-live-binance-contract.mjs'
+      - 'src/data/**'
   workflow_dispatch:
     inputs:
       symbol:
