@@ -41,6 +41,6 @@ test("fetcher paginates with advancing open-time cursor and caches validated res
 test("fetcher rejects non-advancing pagination", async () => {
   const fetchImpl = async () => ({ ok: true, json: async () => [row(0)] });
   await assert.rejects(() => fetchHistoricalKlines({ symbol: "BTCUSDT", interval: "1m",
-    startTime: 0, endTime: 120_000, asOf: 1_000_000, fetchImpl,
+    startTime: 0, endTime: 120_000, asOf: 1_000_000, limit: 1, fetchImpl: async () => ({ ok: true, json: async () => [row(0), row(60_000)] }),
     baseUrls: ["https://example.test"], maxPages: 2 }), /Maximum pagination|pagination/);
 });
